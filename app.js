@@ -32,7 +32,7 @@ app.use('/api/ProductOwners', poRoutes);
 
  const Scrumroutes=require('./routes/Scrumroutes');
  app.use('/api/scrumMasters', Scrumroutes);
- 
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
