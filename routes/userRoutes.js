@@ -178,35 +178,31 @@ router.post('/signin', async (req, res) => {
     });
     router.put('/UpdateInfo', async (req, res) => {
       try {
-          // Récupérer l'ID de l'utilisateur et les données mises à jour depuis le corps de la requête
-          const { id, nom, prenom, adresse, email, description, phone } = req.body;
+          const { email, nom, prenom, adresse, description, phone,birthday } = req.body;
   
-          // Vérifier si l'ID de l'utilisateur est fourni dans la requête
-          if (!id) {
-              return res.status(400).json({ message: "ID de l'utilisateur non fourni" });
+          if (!email) {
+              return res.status(400).json({ message: "Adresse e-mail de l'utilisateur non fournie" });
           }
   
-          // Rechercher l'utilisateur dans la base de données par son ID
-          let developer = await Developer.findById(id);
+          const developer = await Developer.findOne({ email });
   
-          // Vérifier si l'utilisateur existe
           if (!developer) {
               return res.status(404).json({ message: "Utilisateur non trouvé" });
           }
   
-          // Mettre à jour les informations de l'utilisateur avec les nouvelles données
+          // Mettre à jour les informations de l'utilisateur
           developer.nom = nom || developer.nom;
           developer.prenom = prenom || developer.prenom;
-          developer.adresse = adresse || developer.adresse;
-          developer.email = email || developer.email;
-          developer.description = description || developer.description;
-          developer.phone = phone || developer.phone;
-  
+          
+          developer.profileInfo. birthday =birthday|| developer.profileInfo.birthday;
+          developer.profileInfo. description = description || developer.profileInfo.description;
+          developer.profileInfo.phone = phone || developer.profileInfo.phone;
+          developer.profileInfo.address = adresse|| developer.profileInfo.address;
           // Sauvegarder les modifications dans la base de données
-          developer = await developer.save();
+          await developer.save();
   
-          // Retourner les informations mises à jour de l'utilisateur dans la réponse
-          res.status(200).json(developer);
+          // Répondre avec les informations mises à jour
+          res.status(200).json({ message: "Profil mis à jour avec succès", developer });
       } catch (error) {
           res.status(500).json({ message: error.message });
       }
